@@ -9,27 +9,6 @@ It combines:
 - AI mentor chat via OpenRouter (with deterministic fallback)
 - SQLite persistence via Prisma 7
 
-## Recruiter + Demo Handbook
-
-For project-based recruitment and video recording, use:
-
-- [Personal Recruiter Video Handbook](docs/PERSONAL_RECRUITER_VIDEO_HANDBOOK.md)
-
-This handbook includes:
-- Complete recruiter-facing narrative
-- Architecture explanation and trade-offs
-- End-to-end demo script
-- Q&A prep for technical interviews
-- Recording risk register and mitigation checklist
-
-## Hackathon Submission Format
-
-Required deliverables for submission:
-- Git repository link
-- 3-minute video pitch
-
-Deployment link is not required.
-
 ## What This Project Does
 
 The app is designed for real user profiles (not only mock/demo data):
