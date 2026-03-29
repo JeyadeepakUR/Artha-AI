@@ -1,0 +1,87 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+// User Profile - Core financial data
+model UserProfile {
+  id                String   @id @default(cuid())
+  name              String
+  email             String   @unique
+  age               Int
+  maritalStatus     String   // "single", "married", "divorced"
+  monthlyIncome     Float    // in rupees
+  monthlyExpenses   Float    // in rupees
+  currentSavings    Float    // in rupees
+  investments       Float    // in rupees (stocks, mutual funds, etc)
+  emi               Float    // in rupees (home loan, car loan, etc)
+  insurance         Float    // yearly coverage in rupees
+  emergencyFund     Float    // in rupees
+  riskProfile       String   // "conservative", "moderate", "aggressive"
+  
+  // Goals as JSON Array
+  goals             String   @default("[]") // JSON string: Array of {name, target, deadline}
+  
+  // Financial breakdown
+  fixedAssets       Float    @default(0) // property, gold, etc
+  liquidAssets      Float    @default(0) // savings, cash
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  financialPlan     FinancialPlan?
+  chatHistory       ChatMessage[]
+}
+
+// Financial Plan - Calculated metrics and recommendations
+model FinancialPlan {
+  id                    String   @id @default(cuid())
+  userId                String   @unique
+  user                  UserProfile @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Health Score Breakdown (0-100)
+  totalHealthScore      Float    @default(0)
+  emergencyScore        Float    @default(0)  // Based on emergency fund adequacy
+  insuranceScore        Float    @default(0)  // Based on coverage
+  debtScore             Float    @default(0)  // Based on EMI ratio
+  diversificationScore  Float    @default(0)  // Based on asset allocation
+  taxScore              Float    @default(0)  // Based on tax efficiency
+  retirementScore       Float    @default(0)  // Based on retirement readiness
+
+  // FIRE Plan
+  sipAmount             Float    @default(0)  // Monthly SIP needed
+  retirementAge         Int      @default(60) // Target retirement age
+  retirementCorpus      Float    @default(0)  // Total corpus needed
+
+  // Allocation (JSON string)
+  allocation            String   @default("{}")
+
+  // Projected values (JSON string)
+  projections           String   @default("[]")
+
+  // Insights (JSON string)
+  insights              String   @default("[]")
+
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+}
+
+// Chat Messages - AI interaction history
+model ChatMessage {
+  id                String   @id @default(cuid())
+  userId            String
+  user              UserProfile @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  role              String   // "user" or "assistant"
+  content           String   // Message text
+  
+  // Optional structured data for responses (JSON string)
+  metadata          String?
+
+  createdAt         DateTime @default(now())
+
+  @@index([userId])
+}
